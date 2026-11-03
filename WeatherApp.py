@@ -4,10 +4,11 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButto
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 
-
+#creates the weather app object using Qwidget
 class WeatherApp(QWidget):
     def __init__(self):
         super().__init__()
+        #creates all the different objects in the weather app
         self.cityLabel = QLabel("Enter City Name", self)
         self.cityInput = QLineEdit(self)
         self.get_weather_button = QPushButton("Get Weather", self)
@@ -22,7 +23,7 @@ class WeatherApp(QWidget):
         self.label.lower()
         self.initUI()
 
-
+   # function responsible for the UI of the weather app
     def initUI(self):
         self.setStyleSheet("""
               QLabel, QPushButton{
@@ -87,7 +88,7 @@ class WeatherApp(QWidget):
         self.emojiLabel.setAlignment(Qt.AlignCenter)
         self.descriptionLabel.setAlignment(Qt.AlignCenter)
 
-
+        # assigning each object with a specific "class".
         self.cityLabel.setObjectName("city_label")
         self.cityInput.setObjectName("city_input")
         self.get_weather_button.setObjectName("get_weather")
@@ -116,6 +117,7 @@ class WeatherApp(QWidget):
 
             if data["cod"] == 200:
                 self.display_weather(data)
+        #handling error codes using match cases
         except requests.exceptions.HTTPError:
             match responses.status_code:
              case 400:
@@ -146,7 +148,7 @@ class WeatherApp(QWidget):
         except requests.exceptions.RequestException as req_error:
            self.display_error(f"Request Error:\n{req_error}")
 
-
+    #function for displaying error in app
     def display_error(self, message):
         self.tempLabel.setStyleSheet("font-size: 30px;")
         self.tempLabel.setText(message)
@@ -155,7 +157,7 @@ class WeatherApp(QWidget):
 
 
 
-
+    #function for displaying weather as well as calculating different temperatures in F and C
     def display_weather(self, data):
        self.tempLabel.setStyleSheet("font-size: 40px;")
        temperature_k = data["main"]["temp"]
@@ -170,6 +172,7 @@ class WeatherApp(QWidget):
        self.emojiLabel.setText(self.get_weather_emoji(weather_id, weather_code))
        self.descriptionLabel.setText(f"{weather_description}")
 
+    #function for displaying the right emoji based on the weather of the city
     @staticmethod
     def get_weather_emoji(weather_id, weather_code):
         if 200 <= weather_id <= 232:
@@ -198,19 +201,7 @@ class WeatherApp(QWidget):
             return "☁️"
         else:
             return ""
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 # creates the weather app object
 def main():
     app = QApplication(sys.argv)
